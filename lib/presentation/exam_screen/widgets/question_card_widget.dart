@@ -1,0 +1,9 @@
+import 'package:flutter/material.dart';
+
+// Kept for compatibility - main logic moved to exam_screen.dart
+class QuestionCardWidget extends StatelessWidget {
+  const QuestionCardWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
