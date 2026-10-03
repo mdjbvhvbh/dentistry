@@ -6,6 +6,7 @@ import '../../core/app_export.dart';
 import '../../data/models/exam_result_model.dart';
 import '../../data/models/subject_model.dart';
 import '../../data/services/local_database.dart';
+import '../../data/services/remote_sync_service.dart';
 import '../admin_panel/admin_login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,6 +42,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       setState(() => _dbReady = true);
       _fadeController.forward();
     }
+    // مزامنة أسئلة بوت التيليجرام في الخلفية (لا تمنع استخدام التطبيق)
+    RemoteSyncService().sync().then((result) {
+      if (mounted && result.status == 'updated') setState(() {});
+    });
   }
 
   @override
