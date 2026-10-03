@@ -21,7 +21,7 @@ class RemoteSyncService {
       'https://script.google.com/macros/s/AKfycbzZbwLqol5QxOBpBHGbtU_Pcx4jTgClRwGu9e_7rmhliFPUGfWZPFfL4_ilfHuTyytmCw/exec';
 
   /// نفس القيمة الموضوعة في Script Properties باسم API_KEY
-  static const String apiKey = 'HxdH$V2$0_$d4cfk';
+  static const String apiKey = r'HxdH$V2$0_$d4cfk';
 
   static const String _versionKey = 'remote_version';
 
