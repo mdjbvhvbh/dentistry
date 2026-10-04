@@ -131,8 +131,13 @@ class RemoteSyncService {
       if (remoteSubjects.isNotEmpty) {
         final localSubs = db.getSubjects();
         final rIds = remoteSubjects.map((s) => s.id).toSet();
+        final localNames = localSubs.map((s) => s.name.toLowerCase().trim()).toSet();
+        // تجاهل المواد البعيدة التي تطابق مادة محلية بالاسم (منع التكرار)
+        final newSubjects = remoteSubjects.where((s) =>
+          !rIds.contains(s.id) && !localNames.contains(s.name.toLowerCase().trim())
+        ).toList();
         final merged = [
-          ...remoteSubjects,
+          ...newSubjects,
           ...localSubs.where((s) => !rIds.contains(s.id)),
         ];
         await db.saveSubjects(merged);
