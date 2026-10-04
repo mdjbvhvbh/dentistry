@@ -106,10 +106,26 @@ class RemoteSyncService {
       if (localVersion == remoteVersion) return SyncResult.upToDate();
 
       final remoteQuestions = await fetchQuestions();
+
+      // ربط أسئلة البوت بالمواد المحلية عبر مطابقة اسم المادة
+      final localSubjects = db.getSubjects();
+      final mappedQuestions = remoteQuestions.map((q) {
+        SubjectModel? match;
+        final qn = q.subjectName.toLowerCase().trim();
+        for (final s in localSubjects) {
+          if (s.name.toLowerCase().trim() == qn || s.nameAr.trim() == q.subjectName.trim()) {
+            match = s;
+            break;
+          }
+        }
+        if (match != null) return q.copyWith(subjectId: match.id);
+        return q;
+      }).toList();
+
       final local = db.getAllQuestions();
-      final remoteIds = remoteQuestions.map((q) => q.id).toSet();
+      final remoteIds = mappedQuestions.map((q) => q.id).toSet();
       final localOnly = local.where((q) => !remoteIds.contains(q.id)).toList();
-      await db.saveQuestions([...remoteQuestions, ...localOnly]);
+      await db.saveQuestions([...mappedQuestions, ...localOnly]);
 
       final remoteSubjects = await fetchSubjects();
       if (remoteSubjects.isNotEmpty) {
